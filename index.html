@@ -9,9 +9,23 @@
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
             rel="stylesheet"
         />
-        <script async type="module" src="./src/module.js"></script>
     </head>
     <body>
         <h1>My package</h1>
+        <form id="form">
+            <input type="checkbox" name="skill[1]" value="1" />
+            <input type="checkbox" name="skill[2]" value="2" checked />
+            <input type="checkbox" name="skill[3]" value="3" />
+            <input type="checkbox" name="skill[4]" value="4" checked />
+
+            <input type="checkbox" name="profile[0].a" value="1" />
+            <input type="checkbox" name="profile[0].b" value="2" checked />
+            <input type="checkbox" name="profile[0].c" value="3" />
+            <input type="checkbox" name="profile[0].d" value="4" checked />
+        </form>
+        <script type="module">
+            import { formToObject } from "./src/module.js";
+            console.log(formToObject()(form));
+        </script>
     </body>
 </html>

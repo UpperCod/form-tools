@@ -1,74 +1,75 @@
-### Hi, I'm [@uppercod](https://twitter.com/uppercod), This repo provides what you need to start creating module and browser compatible packages (DOM).
+# @uppercod/form-tools
 
-If you need help you can find it at:
+Transform forms into objects, example:
 
-[![twitter](https://raw.githubusercontent.com/atomicojs/docs/master/.gitbook/assets/twitter.svg)](https://twitter.com/atomicojs)
-[![discord](https://raw.githubusercontent.com/atomicojs/docs/master/.gitbook/assets/discord.svg)](https://discord.gg/7z3rNhmkNE)
-
-Now what you have installed is a quick start kit based on Vite, which you can scale for your project, now to continue you must execute the following commands:
-
-1. `npm install`
-2. `npm start` : Initialize the development server
-3. `npm build` : Optional, Generate a build of your project from the html file [index.html](index.html).
-
-## Workspace
-
-### Recommended structure
-
-```bash
-src
-  |- module.js
-```
-
-### Add testing
-
-The test environment is preconfigured for [@web/test-runner](https://modern-web.dev/docs/test-runner/overview/), you must complete the installation of the following devDependencies, installed the devDependencies you can execute the command `npm run test`:
-
-```bash
-npm install -D @web/test-runner @esm-bundle/chai vite-web-test-runner-plugin
-```
-
-#### Test example
+## Module
 
 ```js
-import { expect } from "@esm-bundle/chai";
-
-describe("my test", () => {
-    it("foo is bar", () => {
-        expect("foo").to.equal("bar");
-    });
-});
+import { formToObject } from "@uppercod/form-tools";
 ```
 
-> `@web/test-runner` supports asynchrony, coverage, [viewport and more](https://modern-web.dev/docs/test-runner/commands/).
+## Syntax
 
-### NPM export
-
-Atomico owns the [@atomico/exports](https://atomico.gitbook.io/doc/atomico/atomico-exports) tool that simplifies the generation of builds, types and exports by distributing webcomponents in NPM, you must complete the installation of the following devDependencies, installed the devDependencies you can execute the command `npm run exports`:
-
-```bash
-npm install -D @atomico/exports
+```ts
+formToObject(defaultData?: Object<string,any> )(target: HTMLFormElement):Object<string,any>
 ```
 
-### Postcss
+## Example
 
-This configuration already depends on Postcss, you can more plugins through `package.json#postcss`, example:
+```js
+import { formToObject } from "@uppercod/form-tools";
+
+const form = document.createElement("form");
+
+form.innerHTML = /**html */ `
+    <input type="hidden" name="hidden" value="-1" />
+    <input type="text" name="name" value="1" />
+    <input type="checkbox" name="checkbox.1" value="01" />
+    <input type="checkbox" name="checkbox.2" value="02" checked />
+    <input type="checkbox" name="checkbox.3" />
+    <input type="checkbox" name="checkbox.4" checked />
+    <input type="radio" name="radio.1" value="001" />
+    <input type="radio" name="radio.1" value="002" />
+    <input type="radio" name="radio.2" value="001" />
+    <input type="radio" name="radio.2" value="002" checked />
+    <select name="options">
+        <option value="0001"></option>
+        <option value="0002" selected></option>
+        <option value="0003"></option>
+    </select>
+    <textarea name="textarea">00001</textarea>
+`;
+
+formToObject()(form);
+// {
+//     checkbox: { 1: null, 2: "02", 3: false, 4: true },
+//     hidden: "-1",
+//     name: "1",
+//     options: "0002",
+//     radio: { 1: null, 2: "002" },
+//     textarea: "00001",
+// }
+```
+
+## Expressions
+
+formToObject creates the object based on extracts from the name attribute associated with the field, example:
+
+**Input**:
+
+```html
+<input name="user.name" value="UpperCod" />
+<input type="checkbox" name="skills[1]" value="js" checkbox />
+<input type="checkbox" name="skills[2]" value="css" checkbox />
+```
+
+**Output**:
 
 ```json
-"postcss": {
-  "plugins": {
-    "postcss-import": {}
-  }
+{
+    "user": {
+        "name": "UpperCod"
+    },
+    "skills": ["js", "css"]
 }
-```
-
-> In case of build, Atomico will minify the CSS code.
-
-### Github page
-
-Add to `package.json#scripts.build`:
-
-```bash
---outDir docs # modify the destination directory
---base my-repo # github page folder
 ```

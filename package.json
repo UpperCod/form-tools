@@ -27,7 +27,7 @@
         "start": "vite",
         "build": "vite build",
         "test": "wtr tests/**/*.test.js --node-resolve",
-        "exports": "exports src/components.js --exports --types --main module",
+        "exports": "exports \"src/*.js\" --exports --types --main module",
         "prepublishOnly": "npm run test && npm run exports"
     },
     "devDependencies": {

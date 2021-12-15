@@ -34,9 +34,9 @@ npm install -D @web/test-runner @esm-bundle/chai vite-web-test-runner-plugin
 import { expect } from "@esm-bundle/chai";
 
 describe("my test", () => {
-  it("foo is bar", () => {
-    expect("foo").to.equal("bar");
-  });
+    it("foo is bar", () => {
+        expect("foo").to.equal("bar");
+    });
 });
 ```
 
